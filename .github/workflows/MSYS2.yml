@@ -56,7 +56,7 @@ jobs:
         path: ${{ github.workspace }}\mingw-w64-${{ matrix.env }}-beamerpresenter-${{ matrix.renderer }}-qt${{ matrix.qt }}-git-*.pkg.tar.zst
 
     - name: '🛠️ Install package'
-      run: pacman -U --noconfirm --noprogressbar mingw-w64-${{ matrix.env }}-beamerpresenter-${{ matrix.renderer }}-qt${{ matrix.qt }}-git-*.pkg.tar.zst
+      run: pacman -U --noconfirm --noprogressbar mingw-w64-${{ matrix.env }}-beamerpresenter-${{ matrix.renderer }}-qt${{ matrix.qt }}-git-*.pkg.tar.zst --overwrite '/${{ matrix.sys }}/bin/*'
 
     - name: '🚦 Test package'
       run: |
