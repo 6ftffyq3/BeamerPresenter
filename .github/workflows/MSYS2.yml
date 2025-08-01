@@ -55,20 +55,35 @@ jobs:
         if [ ${{ matrix.sys }} != clang64 ]; then pacman -S --noconfirm --noprogressbar mingw-w64-${{ matrix.env }}-gcc; else pacman -S --noconfirm --noprogressbar mingw-w64-${{ matrix.env }}-clang; fi
         makepkg-mingw --noconfirm --noprogressbar -sCLfp PKGBUILD_MSYS2_git
 
+    - name: '🛠️ Deploy package'
+      run: |
+        PKG_FILE=$(find . -name 'mingw-w64-${{ matrix.env }}-beamerpresenter-${{ matrix.renderer }}-qt${{ matrix.qt }}-git-*.pkg.tar.zst')
+        rm -rf deploy
+        mkdir -p deploy
+        tar --zstd -xf "${PKG_FILE}" -C deploy
+        rm -f "${PKG_FILE}"
+        cd deploy
+        rm -f .BUILDINFO .MTREE .PKGINFO
+        mv '${{ matrix.sys }}/bin'/* .
+        rm -rf '${{ matrix.sys }}/bin'
+        mv etc/xdg/beamerpresenter/* .
+        rm -rf etc
+        echo '.\beamerpresenter.exe -c beamerpresenter.conf -g gui.json' > beamerpresenter.bat
+        tar --zstd -cf "../${PKG_FILE}" *
+
     - name: '📤 Upload artifact: package'
       uses: actions/upload-artifact@v4
       with:
         name: ${{ matrix.sys }}-BeamerPresenter-${{ matrix.renderer }}-qt${{ matrix.qt }}
-        path: ${{ github.workspace }}\mingw-w64-${{ matrix.env }}-beamerpresenter-${{ matrix.renderer }}-qt${{ matrix.qt }}-git-*.pkg.tar.zst
-
-    - name: '🛠️ Install package'
-      run: pacman -U --noconfirm --noprogressbar mingw-w64-${{ matrix.env }}-beamerpresenter-${{ matrix.renderer }}-qt${{ matrix.qt }}-git-*.pkg.tar.zst --overwrite '/${{ matrix.sys }}/bin/*'
+        path: ${{ github.workspace }}/mingw-w64-${{ matrix.env }}-beamerpresenter-${{ matrix.renderer }}-qt${{ matrix.qt }}-git-*.pkg.tar.zst
 
     - name: '🚦 Test package'
       run: |
-        which beamerpresenter
-        beamerpresenter --version
-        dos2unix tests/minimal.pdf
-        dos2unix tests/minimal.xml
-        timeout 20 beamerpresenter --test --platform minimal tests/minimal.pdf
-        timeout 20 beamerpresenter --test --platform minimal tests/minimal.xml
+        cd deploy
+        ./beamerpresenter.exe --version
+        cp ../tests/minimal.pdf .
+        cp ../tests/minimal.xml .
+        dos2unix minimal.pdf
+        dos2unix minimal.xml
+        timeout 20 ./beamerpresenter.exe --test minimal.pdf
+        timeout 20 ./beamerpresenter.exe --test minimal.xml
