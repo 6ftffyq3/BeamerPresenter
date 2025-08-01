@@ -72,5 +72,5 @@ package() {
     DESTDIR="${pkgdir}" "${MINGW_PREFIX}/bin/cmake.exe" --install "${srcdir}/build-${MSYSTEM}"
     cd "${pkgdir}/${MINGW_ARCH}/bin"
     ldd beamerpresenter.exe | grep "/${MINGW_ARCH}" | awk '{print $3}' | xargs -i cp {} .
-    cp -R "${MINGW_PREFIX}/plugins/*" .
+    "${MINGW_PREFIX}/bin/windeployqt.exe" beamerpresenter.exe
 }
