@@ -31,6 +31,11 @@ conflicts=('beamerpresenter')
 backup=("etc/xdg/beamerpresenter/beamerpresenter.conf" "etc/xdg/beamerpresenter/gui.json")
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
 sha256sums=('SKIP')
+windeployqt_exec='windeployqt.exe'
+if [ "${_qt_version_major}" == '6' ]
+then
+    windeployqt_exec='windeployqt6.exe'
+fi
 
 if [ "${_use_mupdf}" == 'ON' ]
 then
@@ -72,5 +77,5 @@ package() {
     DESTDIR="${pkgdir}" "${MINGW_PREFIX}/bin/cmake.exe" --install "${srcdir}/build-${MSYSTEM}"
     cd "${pkgdir}/${MINGW_ARCH}/bin"
     ldd beamerpresenter.exe | grep "/${MINGW_ARCH}" | awk '{print $3}' | xargs -i cp {} .
-    "${MINGW_PREFIX}/bin/windeployqt.exe" beamerpresenter.exe
+    "${MINGW_PREFIX}/bin/${windeployqt_exec}" beamerpresenter.exe
 }
