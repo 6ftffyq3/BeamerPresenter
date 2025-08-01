@@ -76,6 +76,6 @@ build() {
 
 package() {
     DESTDIR="${pkgdir}" "${MINGW_PREFIX}/bin/cmake.exe" --install "${srcdir}/build-${MSYSTEM}"
-    cd "${pkgdir}"/bin
+    cd "${pkgdir}"/"${MINGW_ARCH}"/bin
     ldd beamerpresenter.exe | grep /mingw64 | awk '{print $3}' | xargs -i cp {} .
 }
