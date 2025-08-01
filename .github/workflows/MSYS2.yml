@@ -13,10 +13,16 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - { sys: mingw64, env: x86_64, renderer: poppler, poppler: ON, mupdf: OFF, qt: 5, icon: '🟦' }
+          - { sys: mingw64, env: x86_64, renderer: mupdf, poppler: OFF, mupdf: ON, qt: 5, icon: '🟦' }
           - { sys: mingw64, env: x86_64, renderer: poppler, poppler: ON, mupdf: OFF, qt: 6, icon: '🟦' }
           - { sys: mingw64, env: x86_64, renderer: mupdf, poppler: OFF, mupdf: ON, qt: 6, icon: '🟦' }
+          - { sys: ucrt64,  env: ucrt-x86_64, renderer: poppler, poppler: ON, mupdf: OFF, qt: 5, icon: '🟨' }
+          - { sys: ucrt64,  env: ucrt-x86_64, renderer: mupdf, poppler: OFF, mupdf: ON, qt: 5, icon: '🟨' }
           - { sys: ucrt64,  env: ucrt-x86_64, renderer: poppler, poppler: ON, mupdf: OFF, qt: 6, icon: '🟨' }
           - { sys: ucrt64,  env: ucrt-x86_64, renderer: mupdf, poppler: OFF, mupdf: ON, qt: 6, icon: '🟨' }
+          - { sys: clang64, env: clang-x86_64, renderer: poppler, poppler: ON, mupdf: OFF, qt: 5, icon: '🟧' }
+          - { sys: clang64, env: clang-x86_64, renderer: mupdf, poppler: OFF, mupdf: ON, qt: 5, icon: '🟧' }
           - { sys: clang64, env: clang-x86_64, renderer: poppler, poppler: ON, mupdf: OFF, qt: 6, icon: '🟧' }
           - { sys: clang64, env: clang-x86_64, renderer: mupdf, poppler: OFF, mupdf: ON, qt: 6, icon: '🟧' }
     name: 🚧${{ matrix.icon }} ${{ matrix.sys }} ${{ matrix.renderer }} qt${{ matrix.qt }} | makepkg
