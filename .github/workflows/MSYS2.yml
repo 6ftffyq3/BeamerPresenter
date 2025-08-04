@@ -68,7 +68,7 @@ jobs:
         rm -rf '${{ matrix.sys }}/bin'
         mv etc/xdg/beamerpresenter/* .
         rm -rf etc
-        echo '.\beamerpresenter.exe -c beamerpresenter.conf -g gui.json' > beamerpresenter.bat
+        echo '%~dp0beamerpresenter.exe -c %~dp0beamerpresenter.conf -g %~dp0gui.json' > beamerpresenter.bat
         tar --zstd -cf "../${PKG_FILE}" *
 
     - name: '📤 Upload artifact: package'
