@@ -12,6 +12,7 @@
 #include <QPalette>
 #include <QResizeEvent>
 #include <QTime>
+#include <QScreen>
 #include <algorithm>
 #include <iterator>
 
@@ -63,8 +64,12 @@ void TimerWidget::updateTimeout() noexcept
 void TimerWidget::resizeEvent(QResizeEvent *event) noexcept
 {
   QFont thefont = passed->font();
+  qreal dpr = 1.0;
+  if (QScreen *s = screen()) {
+    dpr = s->logicalDotsPerInchX() / 96.0;
+  }
   thefont.setPointSizeF(
-      std::min(event->size().height() / 2, event->size().width() / 12));
+      std::min(event->size().height() / 2, event->size().width() / 12) / dpr);
   passed->setFont(thefont);
   total->setFont(thefont);
   thefont.setPointSizeF(0.75 * thefont.pointSizeF());

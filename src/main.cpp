@@ -48,6 +48,8 @@ int main(int argc, char *argv[])
   qRegisterMetaType<std::shared_ptr<PointingTool>>(
       "std::shared_ptr<PointingTool>");
 
+  QCoreApplication::setAttribute(Qt::AA_DisableHighDpiScaling);
+
   // Set up the application.
   MasterApp app(argc, argv);
   QString fallback_root = QCoreApplication::applicationDirPath();

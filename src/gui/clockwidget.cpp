@@ -7,6 +7,7 @@
 #include <QTime>
 #include <QTouchEvent>
 #include <QtConfig>
+#include <QScreen>
 #include <algorithm>
 #if (QT_VERSION_MAJOR >= 6)
 #include <QEventPoint>
@@ -34,8 +35,12 @@ ClockWidget::ClockWidget(bool accept_touch_input, QWidget *parent)
 void ClockWidget::resizeEvent(QResizeEvent *event) noexcept
 {
   QFont thefont = font();
+  qreal dpr = 1.0;
+  if (QScreen *s = screen()) {
+    dpr = s->logicalDotsPerInchX() / 96.0;
+  }
   thefont.setPointSizeF(
-      std::min(event->size().height() * 2 / 3, event->size().width() / 6));
+      std::min(event->size().height() * 2 / 3, event->size().width() / 6) / dpr);
   setFont(thefont);
 }
 

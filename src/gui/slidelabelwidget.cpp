@@ -11,6 +11,7 @@
 #include <QResizeEvent>
 #include <QString>
 #include <QTime>
+#include <QScreen>
 #include <algorithm>
 #include <iomanip>
 #include <iostream>
@@ -40,8 +41,12 @@ SlideLabelWidget::SlideLabelWidget(QWidget *parent) : QWidget(parent)
 
 void SlideLabelWidget::resizeEvent(QResizeEvent *event) noexcept
 {
+  qreal dpr = 1.0;
+  if (QScreen *s = screen()) {
+    dpr = s->logicalDotsPerInchX() / 96.0;
+  }
   const int basesize =
-      std::min(event->size().height() * 2 / 3, event->size().width() / 10);
+      std::min(event->size().height() * 2 / 3, event->size().width() / 10) / dpr;
   QFont thefont = edit->font();
   thefont.setPointSize(basesize);
   total->setFont(thefont);
